@@ -20,11 +20,11 @@ client.once('ready', () => {
 });
 
 player.on('trackStart', (queue, track) => {
-	queue.metadata.send(`Started Playing: **${track.title}**.`);
+	queue.metadata.send(`▶ | Started Playing: **${track.title}**.`);
 });
 
 player.on('trackAdd', (queue, track) => {
-	queue.metadata.send(`Added **${track.title}** to the queue!`);
+	queue.metadata.send(`✅ | Added **${track.title}** to the queue!`);
 });
 
 player.on('botDisconnect', (queue) => {
