@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { QueryType } = require('discord-player');
 const playdl = require("play-dl");
-
+// Comment to test
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('play')
