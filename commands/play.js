@@ -37,7 +37,7 @@ module.exports = {
 			await interaction.reply({ content: `⏱ | Loading playlist, adding **${res.playlist.tracks.length}** songs to the queue!` });
 		}
 
-		res.playlist ? queue.addTracks(res.playlist.tracks) : queue.addTrack(res.tracks[0])
+		res.playlist ? queue.addTracks(res.playlist.tracks) : queue.addTrack(res)
 
 		if (!queue.playing) await queue.play()
 	},
