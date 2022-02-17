@@ -16,7 +16,7 @@ module.exports = {
 			searchEngine: QueryType.AUTO
 		}).then(x => x.tracks[0]);
 
-		if (!res || !res.playlist.tracks) return await interaction.reply({content: `❌ | Track **${query}** not found!`});
+		if (!res) return await interaction.reply({content: `❌ | Track **${query}** not found!`});
 
 		const queue = player.createQueue(interaction.guild, {
 			metadata: interaction.channel,
