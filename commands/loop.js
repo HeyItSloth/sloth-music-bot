@@ -12,7 +12,7 @@ module.exports = {
 			.addChoice("Track", QueueRepeatMode.TRACK)
 			.addChoice("Queue", QueueRepeatMode.QUEUE)
 			.addChoice("Autoplay", QueueRepeatMode.AUTOPLAY)),
-	async execute(interaction, player) {
+	async execute(interaction, player, DB) {
 		const checkRestrict = await DB.findOne({where:{name:'music'}});
 		if (checkRestrict) {
 			const restrictChannel = await interaction.guild.channels.fetch(checkRestrict.channel);

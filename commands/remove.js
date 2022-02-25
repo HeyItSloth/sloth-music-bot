@@ -5,7 +5,7 @@ module.exports = {
 		.setName('remove')
 		.setDescription('Remove a song from the queue')
 		.addIntegerOption(option => option.setName('track').setDescription('The position of the song in the queue').setRequired(true)),
-	async execute(interaction, player) {
+	async execute(interaction, player, DB) {
 		const checkRestrict = await DB.findOne({where:{name:'music'}});
 		if (checkRestrict) {
 			const restrictChannel = await interaction.guild.channels.fetch(checkRestrict.channel);

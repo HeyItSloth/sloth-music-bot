@@ -4,7 +4,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('clear')
 		.setDescription('Clears the queue'),
-	async execute(interaction, player) {
+	async execute(interaction, player, DB) {
 		const checkRestrict = await DB.findOne({where:{name:'music'}});
 		if (checkRestrict) {
 			const restrictChannel = await interaction.guild.channels.fetch(checkRestrict.channel);

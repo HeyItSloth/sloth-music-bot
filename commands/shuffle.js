@@ -10,7 +10,7 @@ module.exports = {
             .setRequired(true)
             .addChoice("Off", 1)
             .addChoice("On", 2)),
-    async execute(interaction, player) {
+    async execute(interaction, player, DB) {
 		const checkRestrict = await DB.findOne({where:{name:'music'}});
 		if (checkRestrict) {
 			const restrictChannel = await interaction.guild.channels.fetch(checkRestrict.channel);
