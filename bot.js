@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { Client, Intents, Collection } = require('discord.js');
+const { Client, Intents, Collection, MessageEmbed } = require('discord.js');
 const { token } = require('./config.json');
 const { Player } = require('discord-player');
 const { Sequelize, DataTypes } = require('sequelize');
@@ -43,8 +43,19 @@ client.once('ready', () => {
 	Restrict.sync({ force: false });
 });
 
+
 player.on('trackStart', (queue, track) => {
-	queue.metadata.send(`▶ | Started Playing: **${track.title}**.`);
+	const nowplay = new MessageEmbed()
+		.setTitle(`Now Playing: ${track.title}`)
+		.setURL(track.url)
+		.setDescription(`▬▬▬▬▬▬▬▬▬▬▬▬▬▬ 00:00/${track.duration}`)
+		.setColor('#0000ff')
+		.addFields(
+			{ name: 'Requested By', value: track.requestedBy.tag, inline: true },
+			{ name: 'Artist', value: track.author, inline: true }
+		)
+		.setTimestamp()
+	queue.metadata.send({ embeds: [nowplay] });
 });
 
 player.on('trackAdd', (queue, track) => {
