@@ -27,7 +27,7 @@ module.exports = {
 		const queue = player.createQueue(interaction.guild, {
 			metadata: interaction.channel,
 			leaveOnEnd: false,
-			leaveOnEmptyCooldown: 200000,
+			leaveOnEmptyCooldown: 20000,
 			leaveOnEmpty: true,
 		});
 
