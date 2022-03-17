@@ -3,6 +3,7 @@ const { Client, Intents, Collection, MessageEmbed, MessageActionRow, MessageButt
 const { token } = require('./config.json');
 const { Player } = require('discord-player');
 const { Sequelize, DataTypes } = require('sequelize');
+const { getVoiceConnection } = require('@discordjs/voice');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES] });
 const player = new Player(client);
@@ -24,6 +25,18 @@ for (const file of buttonFiles) {
 	client.buttons.set(button.data, button);
 }
 
+let tracks = new Array()
+function LoadSaved() {
+	tracks = []
+	const savedTracks = fs.readdirSync('./saved').filter(file => file.endsWith('.json'));
+	for (const file of savedTracks) {
+		fs.readFile(`./saved/${file}`, function(err, data) {
+			const track = JSON.parse(data);
+			tracks.push(track);
+		});
+	};
+};
+
 const sequelize = new Sequelize('database','user','password', {
 	host:		'localhost',
 	dialect:	'sqlite',
@@ -41,6 +54,13 @@ const Restrict = sequelize.define('restrict', {
 
 client.once('ready', () => {
 	console.log('Ready!');
+
+	client.user.setActivity({
+        name: "🎶 | Music Time",
+        type: "LISTENING"
+    });
+
+	LoadSaved();
 
 	try {
 		sequelize.authenticate();
@@ -64,7 +84,7 @@ player.on('trackStart', (queue, track) => {
 			{ name: 'Artist', value: track.author, inline: true }
 		)
 		.setTimestamp()
-	const row = new MessageActionRow()
+	const row1 = new MessageActionRow()
 			.addComponents(
 				new MessageButton()
 					.setCustomId('restart')
@@ -86,7 +106,22 @@ player.on('trackStart', (queue, track) => {
 					.setStyle('SECONDARY')
 					.setEmoji('⏭️')
 			);
-	queue.metadata.send({ embeds: [nowplay], components: [row] });
+	const row2 = new MessageActionRow()
+			.addComponents(
+				new MessageButton()
+					.setCustomId('save')
+					.setLabel('')
+					.setStyle('SECONDARY')
+					.setEmoji('❤️')
+			)
+			.addComponents(
+				new MessageButton()
+					.setCustomId('stop')
+					.setLabel('')
+					.setStyle('SECONDARY')
+					.setEmoji('⏹️')
+			);
+	queue.metadata.send({ embeds: [nowplay], components: [row1, row2] });
 });
 
 player.on('trackAdd', (queue, track) => {
@@ -94,11 +129,16 @@ player.on('trackAdd', (queue, track) => {
 });
 
 player.on('botDisconnect', (queue) => {
+	console.log('>> Disconnected')
 	queue.metadata.send('I was manually disconnected from the channel, clearing queue');
+	queue.destroy();
 });
 
 player.on('channelEmpty', (queue) => {
 	queue.metadata.send('Channel is empty, disconnecting...');
+	const connection = getVoiceConnection(queue.guild.me.voice.channelId)
+	connection.destroy();
+	queue.destroy();
 });
 
 player.on('queueEnd', (queue) => {
@@ -112,8 +152,10 @@ client.on('interactionCreate', async interaction => {
 
 	if (!command) return;
 
+	if (interaction.commandName === 'saved') {LoadSaved()};
+
 	try {
-		await command.execute(interaction, player, Restrict);
+		await command.execute(interaction, player, Restrict, tracks);
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({content: 'There was an error while executing this command!', ephemeral: true });
