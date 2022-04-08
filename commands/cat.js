@@ -7,7 +7,6 @@ module.exports = {
 		.setDescription('Gib cat'),
 	async execute(interaction) {
 		const response = await fetch("https://aws.random.cat/meow");
-		console.log(response.ok)
 		if (response.ok) {
 			const {file} =  await response.json();
 			interaction.reply({ files: [file] });
