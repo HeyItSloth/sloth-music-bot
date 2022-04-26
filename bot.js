@@ -10,11 +10,17 @@ const player = new Player(client);
 let paused;
 
 client.commands = new Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandDirs = fs.readdirSync('./commands');
+for (dir of commandDirs) {
+	console.log(`>> Beginning init of commands in '${dir}' category.`)
+	const commandFiles = fs.readdirSync(`./commands/${dir}`).filter(file => file.endsWith('.js'));
 
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	client.commands.set(command.data.name, command);
+	for (const file of commandFiles) {
+		console.log(`>>> Initializing ${file}...`)
+		const command = require(`./commands/${dir}/${file}`);
+		client.commands.set(command.data.name, command);
+	}
+	console.log(`>> Completed init of '${dir}', total tasks: ${commandFiles.length}`)
 }
 
 client.buttons = new Collection();
