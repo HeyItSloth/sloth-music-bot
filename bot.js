@@ -28,6 +28,9 @@ for (const file of buttonFiles) {
 let tracks = new Array()
 function LoadSaved() {
 	tracks = []
+	if (!fs.existsSync('./saved')) {
+		fs.mkdirSync('./saved');
+	};
 	const savedTracks = fs.readdirSync('./saved').filter(file => file.endsWith('.json'));
 	for (const file of savedTracks) {
 		fs.readFile(`./saved/${file}`, function(err, data) {
