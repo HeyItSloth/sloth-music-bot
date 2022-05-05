@@ -11,6 +11,7 @@ module.exports = {
 			const {file} =  await response.json();
 			interaction.reply({ files: [file] });
 		} else {
+			console.log(response.status);
 			interaction.reply("Shit's brokey, yo");
 		};
 	},

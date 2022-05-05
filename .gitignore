@@ -1,5 +1,5 @@
 node_modules
 .eslintrc.json
-config.json
 database.sqlite
 saved
+config.json
