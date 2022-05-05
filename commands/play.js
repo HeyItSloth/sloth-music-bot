@@ -17,19 +17,9 @@ module.exports = {
 		if (!interaction.member.voice.channelId) return await interaction.reply({content: '❌ | You are not in a voice channel!', ephemeral: true});
 		if (interaction.guild.me.voice.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) return await interaction.reply({content: '❌ | You are not in my voice channel!', ephemeral: true});
 		const query = interaction.options.get('query').value;
-		let engine
-		if (query.includes('spotify.com/track')) {
-			engine = QueryType.SPOTIFY_SONG;
-		} else if (query.includes('spotify.com/album')) {
-			engine = QueryType.SPOTIFY_ALBUM;
-		} else if (query.includes('spotify.com/playlist')) {
-			engine = QueryType.SPOTIFY_PLAYLIST;
-		} else {
-			engine = QueryType.AUTO;
-		}
 		const res = await player.search(query, {
 			requestedBy: interaction.user,
-			searchEngine: engine
+			searchEngine: QueryType.AUTO,
 		}).then(x => x.tracks[0]);
 
 		if (!res) return await interaction.reply({content: `❌ | Track **${query}** not found!`});
